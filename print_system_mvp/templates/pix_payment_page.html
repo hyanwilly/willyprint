@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Pagar via Pix - Plano {{ payment_details.descricao }}</title>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='style.css') }}">
+    <style>
+        body {
+            font-family: 'Roboto', sans-serif;
+            margin: 0;
+            background: linear-gradient(135deg, #e0f7fa 0%, #b2ebf2 100%);
+            color: #37474f;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+        .container {
+            background-color: #fff;
+            padding: 40px;
+            border-radius: 12px;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+            max-width: 700px;
+            width: 95%;
+            text-align: center;
+            box-sizing: border-box;
+        }
+        .logo {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        .logo img {
+            max-width: 140px;
+            height: auto;
+            opacity: 0.8;
+        }
+        h2 {
+            color: #1976d2;
+            margin-bottom: 20px;
+            font-size: 2.2em;
+            font-weight: 700;
+        }
+        h2 span {
+            color: #388e3c;
+        }
+        .payment-details-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-bottom: 30px;
+            background-color: #f9fbe7;
+            padding: 25px;
+            border-radius: 10px;
+            box-shadow: 0 3px 8px rgba(0, 0, 0, 0.05);
+            border: 1px solid #f0f4c3;
+            box-sizing: border-box;
+        }
+        .qr-code-display {
+            margin-bottom: 20px;
+        }
+        .qr-code-display h3 {
+            color: #2e7d32;
+            font-size: 1.1em;
+            margin-bottom: 10px;
+        }
+        .qr-code-display img {
+            max-width: 200px;
+            height: auto;
+            border: 6px solid #fff;
+            border-radius: 6px;
+            box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08);
+        }
+        .pix-details {
+            text-align: center;
+        }
+        .pix-details p {
+            font-size: 0.95em;
+            color: #546e7a;
+            margin-bottom: 6px;
+        }
+        .pix-details p strong {
+            color: #1a237e;
+            font-weight: 600;
+        }
+        #timer {
+            font-size: 1.2em;
+            color: #d32f2f;
+            margin-top: 20px;
+            font-weight: bold;
+            letter-spacing: 1px;
+        }
+        .instruction {
+            color: #78909c;
+            margin-top: 15px;
+            font-size: 0.9em;
+            line-height: 1.5;
+        }
+        .back-link {
+            margin-top: 30px;
+        }
+        .back-link a {
+            color: #1976d2;
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.3s ease;
+            font-size: 0.9em;
+        }
+        .back-link a:hover {
+            color: #0d47a1;
+            text-decoration: underline;
+        }
+        .whatsapp-link-container {
+    text-align: center; /* Centraliza o botão */
+}
+
+.whatsapp-button {
+    display: inline-flex; /* Para alinhar ícone e texto */
+    align-items: center;
+    justify-content: center;
+    padding: 10px 18px; /* Reduzi um pouco o padding */
+    background-color: #4CAF50; /* Um tom de verde mais vivo */
+    color: white;
+    text-decoration: none;
+    border-radius: 50px; /* Deixa o botão mais arredondado */
+    margin-top: 20px;
+    font-size: 1em;
+    font-weight: 600; /* Um pouco menos bold */
+    transition: background-color 0.3s ease, transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.15); /* Sombra mais sutil */
+    border: 2px solid transparent; /* Borda transparente para o efeito hover */
+}
+
+.whatsapp-button:hover {
+    background-color: #43A047; /* Tom de verde mais escuro no hover */
+    transform: translateY(-2px); /* Levemente para cima no hover */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Sombra mais forte no hover */
+    border-color: #388E3C; /* Adiciona uma borda sutil no hover */
+}
+
+.whatsapp-button svg {
+    width: 20px; /* Reduzi o tamanho do ícone */
+    height: 20px; /* Reduzi o tamanho do ícone */
+    margin-right: 8px; /* Reduzi a margem do ícone */
+    fill: white;
+}
+    </style>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <div class="logo">
+            <img src="{{ url_for('static', filename='logo.png') }}" alt="Logotipo Willy Print">
+        </div>
+        <h2>Faça o pagamento! <br><span >{{ payment_details.descricao }}</span></h2>
+        <div class="payment-details-container">
+            <div class="qr-code-display">
+                <h3>Escaneie com seu app bancário:</h3>
+                <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAcIAAAHCAQAAAABUY/ToAAADp0lEQVR4nO2cTWrkMBCFX40MvZRhDtBHkW+QI4U5Um5gH6UPELCXBpk3C0m27O5hID8kMa8Wncj2h9pQ1L/aiLfJ8OuNICBSpEiRIkWKFPn9SMvSwLqpLLqpAYDFMKTleuOLv63Ib0kGkuS4XXdkj6XoS1o6kiT35Nv3FHkSssl/pxYILwCH1kUAi3F4ig0xtbD1aQNcfPeeIs9FNod10RdHAI4GTwBYDOHlo/YUeW4yObShBRDGxdhPltSK/aftKfIcpCezlvgIYCr2KYyOGCwvScYj+fY9RZ6DRB0mwzEpzeOP8lQgyf5nvafIzyOTgakaHkOJoTlcIwA/W77m922Rn/WeIj+PzHYojDniYe8j2KeYGkBgRPJ0HB3Z+yg7JHIvOdAZrrEB/Gtj4dbA4F8N8K8NUoY2GQg/G4CL6kMiD5LtECNSxJNiH8Z0I0dLngR8TDF1uig7JLLIFlNnjRkdi1cja682lgRfvkzkQ9LRuqmBWYtsjDCZWednS1EQAFi3qtRPfU+RH04Wz1RiZaQEf7NNo2PyYEmRvHyZyH+RjqmyGMbFkJobKRRKuX0S8nahdV//bUV+IzLlZQa/NICfjSlDK2LwIxFul2yghifVqUUepcTULofTHF1xaCVDK/+RystE3stap16M8BEGPxsx/QbSAIg5YrhGENPviKFTTC3yIWnddKF1kxl7AGbtYkgxkp/NnkcAucYIWPche4o8C7naoQgCMdWpi6mJ1YMWekcLY2t8754iz0WulcV1QsiT7H2pTldl6xEpMlI8JHIvVUzd+4hSp3YsdWqgutuX6pF0SOQqW4cDWzaG0uYo5UVWGZrskMgHpNl1NpJzLi8m8bMB04UAFuOfMsxo3YfsKfIsZPFlfmtulCEiVh38Oh6SLxP5gCRvTe6IpelFOJq1q/WZLrSupPo5RvqJ7ynyM8gyg/YUYcCFFm7pdGuD0C8NABcxPM2W1Afq24u8k20WNo+8ktUk/m40Ng8WyZeJ3MuhPrTNClXZ2GZ9wjrcKB0SWYR72SxSPmmW7BBQzxRJh0TWUmqMANYT0ikb60vFmlyb99C5DpF3kq3PVmisNCffqD6gOrXIO6k8WFjbHFxj6nyqbDNV8mUi/0PaM2fD0C65DDRcI+x5LD/mEEjNwoo8yMEO5W49ebRI23l72SGReznEQ7llj2J4chPE1em/dEjkTu7yslJU3A7Y36X/0iGRlRj//8xD0W+cixQpUqRIkSJPQv4F4OlJrhQZWZUAAAAASUVORK5CYII=" alt="QR Code PIX" />
+            </div>
+            <div class="pix-details">
+                <p>Ou utilize a chave Pix:</p>
+                <p><strong>{{ payment_details.chave_pix }}</strong></p>
+                <p>Valor a pagar: <strong>R$ {{ payment_details.valor }}</strong></p>
+                <p>Referência: {{ payment_details.descricao }}</p>
+                <p>Seu Código de Pedido: <strong>{{ payment_details.order_code }}</strong></p>
+            </div>
+        </div>
+        <p class="instruction">Confirme o pagamento em até <span id="timer">01:00:00</span>.</p>
+        <p class="instruction">Após pagar, envie o código do pedido para o administrador para ativação imediata do seu plano.</p>
+        <div class="whatsapp-link-container">
+            <a href="https://wa.me/{{ '+5538997333443' }}?text=Olá!%20Meu%20código%20de%20pedido:%20{{ payment_details.order_code }}"
+               class="whatsapp-button"
+               target="_blank"
+            >
+                <svg viewBox="0 0 32 32" style="enable-background:new 0 0 32 32;" version="1.1" xml:space="preserve" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+                    <path d="M19.11,17.205c-0.045-0.108-0.108-0.18-0.18-0.225c-0.225-0.225-0.63-0.36-1.08-0.54c-0.45-0.18-0.84-0.36-1.29-0.54c-0.9-0.36-1.935-0.9-2.61-1.62c-0.675-0.72-1.125-1.53-1.35-2.34c-0.225-0.81-0.36-1.62-0.18-2.43c0.18-0.81,0.54-1.44,1.26-1.89c0.72-0.45,1.53-0.72,2.34-0.72c0.81,0,1.53,0.27,2.16,0.81c0.63,0.54,1.08,1.26,1.35,2.16c0.27,0.9,0.36,1.8,0.18,2.7c-0.18,0.9-0.54,1.71-1.26,2.34c-0.72,0.63-1.53,1.08-2.34,1.35c-0.81,0.27-1.62,0.36-2.43,0.18c-0.81-0.18-1.44-0.54-1.89-1.26c-0.45-0.72-0.72-1.53-0.72-2.34c0-0.81,0.27-1.53,0.81-2.16c0.54-0.63,1.26-1.08,2.16-1.35c0.9-0.27,1.8-0.36,2.7-0.18c0.9,0.18,1.71,0.54,2.34,1.26c0.63,0.72,1.08,1.53,1.35,2.34c0.27,0.81,0.36,1.62,0.18,2.43c-0.18,0.81-0.54,1.44-1.26,1.89c-0.72,0.45-1.53,0.72-2.34,0.72c-0.81,0-1.53-0.27-2.16-0.81c-0.63-0.54-1.08-1.26-1.35-2.16c-0.27-0.9-0.36-1.8-0.18-2.7c0.18-0.9,0.54-1.71,1.26-2.34c0.72-0.63,1.53-1.08,2.34-1.35c0.81-0.27,1.62-0.36,2.43-0.18c0.81,0.18,1.44,0.54,1.89,1.26c0.45,0.72,0.72,1.53,0.72,2.34c0,0.81-0.27,1.53-0.81,2.16c-0.54,0.63-1.26,1.08-2.16,1.35c-0.9,0.27-1.8,0.36-2.7,0.18C20.64,17.745,19.605,17.205,19.11,17.205z M26.005,5.595c-0.48,0-0.96,0.09-1.44,0.27c-5.4,2.7-11.34,8.28-14.31,14.31c-0.18,0.48-0.27,0.96-0.27,1.44c0,0.48,0.09,0.96
+                    c0.27,1.44,0.81,2.7,1.62,3.78c0.81,1.08,1.89,1.98,3.15,2.61c1.26,0.63,2.7,0.99,4.23,0.99c0.48,0,0.96-0.09,1.44-0.27c5.4-2.7,11.34-8.28,14.31-14.31c0.18-0.48,0.27-0.96,0.27-1.44C26.285,6.075,26.195,5.595,26.005,5.595z" fill="white"/>
+                </svg>
+                Enviar Comprovante via WhatsApp
+            </a>
+        </div>
+        <p class="back-link"><a href="{{ url_for('plans') }}">Voltar para a escolha de planos</a></p>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            let duration = 60 * 60; // 1 hora em segundos
+            const timerDisplay = document.getElementById('timer');
+
+            function updateTimer() {
+                const hours = Math.floor(duration / 3600);
+                const minutes = Math.floor((duration % 3600) / 60);
+                const seconds = duration % 60;
+                const formattedTime = `${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
+                timerDisplay.textContent = formattedTime;
+
+                if (duration <= 0) {
+                    clearInterval(intervalId);
+                    timerDisplay.textContent = "Tempo Expirado!";
+                    // Aqui você pode adicionar alguma ação se o tempo expirar
+                } else {
+                    duration--;
+                }
+            }
+
+            const intervalId = setInterval(updateTimer, 1000);
+            updateTimer(); // Para exibir o timer imediatamente
+        });
+    </script>
+</body>
+</html>

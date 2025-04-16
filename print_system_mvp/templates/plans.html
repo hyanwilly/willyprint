@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Escolher Plano</title>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='style.css') }}">
+    <style>
+        body {
+            font-family: 'Montserrat', sans-serif; /* Outra fonte moderna */
+            margin: 0;
+            background: #f0f2f5; /* Fundo claro */
+            color: #4a5568; /* Cinza escuro para o texto */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+        .container {
+            background-color: #fff;
+            padding: 50px;
+            border-radius: 12px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08); /* Sombra suave */
+            max-width: 960px;
+            width: 95%;
+            text-align: center;
+        }
+        .logo {
+            text-align: center;
+            margin-bottom: 50px;
+        }
+        .logo img {
+            max-width: 180px;
+            height: auto;
+        }
+        h2 {
+            color: #2d3748; /* Cor de texto mais escura */
+            margin-bottom: 30px;
+            font-size: 2.8em;
+            font-weight: 700;
+        }
+        p {
+            color: #718096; /* Cinza um pouco mais claro */
+            margin-bottom: 40px;
+            font-size: 1.15em;
+            line-height: 1.7;
+        }
+        .plans-grid-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); /* Cards um pouco mais largos */
+            gap: 30px;
+            margin-bottom: 40px;
+        }
+        .plan-card {
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.06); /* Sombra mais sutil */
+            padding: 35px;
+            text-align: left; /* Alinhamento à esquerda para o conteúdo */
+            position: relative;
+            transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+            border-left: 5px solid #4299e1; /* Barra lateral colorida */
+        }
+        .plan-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.08);
+        }
+        .popular-badge {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background-color: #dd6b20; /* Laranja mais quente */
+            color: white;
+            padding: 6px 12px;
+            border-radius: 5px;
+            font-size: 0.85em;
+            font-weight: 600;
+        }
+        .plan-title {
+            color: #2d3748;
+            margin-bottom: 10px;
+            font-size: 1.6em;
+            font-weight: 700;
+        }
+        .plan-price {
+            font-size: 2em;
+            color: #38a169; /* Verde mais suave */
+            margin-bottom: 20px;
+            font-weight: 600;
+        }
+        .plan-price small {
+            font-size: 0.65em;
+            color: #718096;
+        }
+        .plan-features {
+            list-style: none;
+            padding: 0;
+            margin-bottom: 30px;
+        }
+        .plan-features li {
+            padding: 8px 0;
+            border-bottom: 1px solid #edf2f7; /* Linha divisória clara */
+            color: #4a5568;
+            font-size: 1em;
+        }
+        .plan-features li:last-child {
+            border-bottom: none;
+        }
+        .select-button {
+            display: inline-block;
+            padding: 12px 28px;
+            background-color: #4299e1; /* Azul mais vibrante */
+            color: white;
+            text-decoration: none;
+            border-radius: 6px;
+            transition: background-color 0.3s ease, transform 0.2s ease-in-out;
+            font-size: 1.1em;
+            font-weight: 600;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.08);
+        }
+        .select-button:hover {
+            background-color: #3182ce;
+            transform: scale(1.03);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        .current-badge {
+            background-color: #48bb78; /* Verde mais brilhante */
+            color: white;
+            padding: 10px 20px;
+            border-radius: 6px;
+            font-size: 1em;
+            font-weight: 600;
+        }
+        .mt-2 {
+            margin-top: 40px;
+            text-align: center;
+        }
+        .mt-2 a {
+            margin: 0 20px;
+            color: #718096;
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.3s ease;
+        }
+        .mt-2 a:hover {
+            color: #4299e1;
+        }
+        .alert {
+            padding: 15px;
+            border-radius: 6px;
+            margin-top: 20px;
+            text-align: center;
+            font-weight: bold;
+        }
+        .alert-success {
+            background-color: #c6f6d5;
+            color: #1a5534;
+            border: 1px solid #9ae6b4;
+        }
+    </style>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <div class="logo">
+            <img src="{{ url_for('static', filename='logo.png') }}" alt="Logotipo Willy Print">
+        </div>
+        <h2>Escolha o seu plano</h2>
+        <p>Nossos planos flexíveis são projetados para atender às suas necessidades de impressão. Selecione o plano ideal para você e comece agora mesmo!</p>
+
+        <div class="plans-grid-container">
+            {% for key, plan in planos_data.items() %}
+            <div class="plan-card {% if 'popular' in plan and plan.popular %}popular-plan{% endif %}">
+                {% if 'popular' in plan and plan.popular %}
+                <span class="popular-badge">Popular</span>
+                {% endif %}
+                <h3 class="plan-title">{{ plan.nome }}</h3>
+                <p class="plan-price">R$ {{ plan.preco }} <small>/ mês</small></p>
+                <ul class="plan-features">
+                    <li><strong>Limite de Impressão:</strong> {{ plan.limite }} páginas</li>
+                    <li><strong>Validade do Plano:</strong> {{ plan.validade_dias }} dias</li>
+                    <li>Suporte prioritário</li>
+                </ul>
+                {% if user_plan == key %}
+                <span class="current-badge">Plano Atual</span>
+                {% else %}
+                <a href="{{ url_for('pay', plan_name=key) }}" class="select-button">Selecionar</a>
+                {% endif %}
+            </div>
+            {% endfor %}
+        </div>
+
+        {% if session.get('cancel_success') %}
+        <div class="alert alert-success">
+            {{ session.pop('cancel_success') }}
+        </div>
+        {% endif %}
+
+        <div class="mt-2">
+            <a href="{{ url_for('dashboard') }}">Voltar ao Painel</a>
+            <span>|</span>
+            <a href="{{ url_for('logout') }}">Sair</a>
+        </div>
+    </div>
+</body>
+</html>

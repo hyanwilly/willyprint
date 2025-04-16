@@ -1,0 +1,359 @@
+body {
+    font-family: sans-serif;
+    margin: 0; /* Reset padrão da margem */
+    background-color: #f4f4f4;
+    color: #333;
+    display: flex; /* Para centralizar verticalmente e horizontalmente */
+    justify-content: center; /* Centraliza horizontalmente */
+    align-items: center; /* Centraliza verticalmente */
+    min-height: 100vh; /* Garante que ocupa a altura total da viewport */
+}
+
+.container {
+    max-width: 400px; /* Largura máxima para o container centralizado */
+    padding: 30px;
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+    margin: 20px; /* Adiciona margem ao redor do container */
+    width: 90%; /* Garante que não fique muito largo em telas menores */
+    box-sizing: border-box; /* Inclui padding e border na largura */
+}
+
+h1, h2 {
+    color: #007bff;
+    text-align: center; /* Centraliza o texto dos títulos */
+    margin-bottom: 25px;
+}
+
+a {
+    color: #007bff;
+    text-decoration: none;
+    transition: color 0.3s ease;
+}
+
+a:hover {
+    text-decoration: underline;
+    color: #0056b3;
+}
+
+form {
+    margin-bottom: 20px;
+}
+
+.form-group {
+    margin-bottom: 20px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: bold;
+    color: #555;
+}
+
+.form-group input[type="email"],
+.form-group input[type="password"],
+.form-group input[type="text"] {
+    width: calc(100% - 16px);
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    box-sizing: border-box;
+    font-size: 1em;
+    transition: border-color 0.3s ease;
+}
+
+.form-group input[type="email"]:focus,
+.form-group input[type="password"]:focus,
+.form-group input[type="text"]:focus {
+    border-color: #007bff;
+    outline: none;
+    box-shadow: 0 0 8px rgba(0, 123, 255, 0.3);
+}
+
+button[type="submit"] {
+    background-color: #28a745;
+    color: white;
+    padding: 12px 25px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 1.1em;
+    transition: background-color 0.3s ease;
+    width: 100%; /* Ocupa a largura total do container */
+    display: block; /* Para aplicar a largura */
+    margin-top: 15px; /* Espaçamento acima do botão */
+}
+
+button[type="submit"]:hover {
+    background-color: #218838;
+}
+
+.error {
+    color: #dc3545; /* Cor vermelha para erros */
+    margin-bottom: 15px;
+    padding: 10px;
+    background-color: #fdecea;
+    border: 1px solid #dc3545;
+    border-radius: 4px;
+    text-align: center;
+}
+
+.mt-2 {
+    margin-top: 15px;
+    text-align: center;
+}
+
+.mt-2 a {
+    font-size: 0.9em;
+    color: #6c757d;
+}
+
+.mt-2 a:hover {
+    color: #495057;
+}
+/* ... outros estilos ... */
+
+.logo {
+    text-align: center; /* Centraliza a imagem da logotipo */
+    margin-bottom: 20px; /* Espaçamento abaixo da logotipo */
+}
+
+.logo img {
+    max-width: 150px; /* Ajuste o tamanho conforme necessário */
+    height: auto;
+}
+
+/* ... outros estilos ... */
+
+.current-plan {
+    background-color: #e6ffe6; /* Verde claro */
+    border: 1px solid #b3ffb3;
+    color: #198754; /* Verde escuro */
+    padding: 15px;
+    border-radius: 6px;
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+.plans-list li.current {
+    border-color: #28a745; /* Borda verde mais forte para o plano atual */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.08);
+}
+
+.current-badge {
+    background-color: #28a745;
+    color: white;
+    padding: 8px 12px;
+    border-radius: 4px;
+    font-size: 0.9em;
+    margin-top: 10px;
+    display: inline-block;
+}
+/* ... outros estilos ... */
+
+.payment-info {
+    margin-top: 20px;
+    border: 1px solid #ccc;
+    padding: 15px;
+    border-radius: 5px;
+    background-color: #f9f9f9;
+    text-align: center;
+}
+
+.payment-info.hidden {
+    display: none;
+}
+
+/* ... seus estilos existentes ... */
+
+/* Estilos para a animação de sucesso */
+.success-animation {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 20px;
+    opacity: 0;
+    transform: scale(0.8);
+    animation: fadeInScale 0.3s ease-out forwards 0.5s; /* Pequeno delay */
+}
+
+.success-icon {
+    background-color: #28a745;
+    color: #fff;
+    border-radius: 50%;
+    width: 30px;
+    height: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.2em;
+    margin-right: 10px;
+}
+
+.success-text {
+    color: #28a745;
+    font-weight: bold;
+}
+
+@keyframes fadeInScale {
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+/* Estilos para a mensagem de confirmação */
+.confirmation-overlay {
+    display: none; /* Inicialmente escondido */
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5); /* Fundo semi-transparente */
+    z-index: 1000; /* Garante que fique acima de outros elementos */
+    align-items: center;
+    justify-content: center;
+}
+
+.confirmation-box {
+    background-color: #fff;
+    padding: 30px;
+    border-radius: 12px;
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+    text-align: center;
+}
+
+.confirmation-box h3 {
+    color: #dc3545; /* Vermelho para o título de alerta */
+    margin-bottom: 15px;
+}
+
+.confirmation-box p {
+    color: #555;
+    margin-bottom: 20px;
+    line-height: 1.6;
+}
+
+.confirmation-buttons button {
+    padding: 12px 24px;
+    margin: 0 10px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: background-color 0.3s ease;
+}
+
+.confirm-button {
+    background-color: #dc3545; /* Vermelho para confirmar ação destrutiva */
+    color: white;
+}
+
+.confirm-button:hover {
+    background-color: #c82333;
+}
+
+.cancel-button {
+    background-color: #6c757d; /* Cinza para cancelar */
+    color: white;
+}
+
+.cancel-button:hover {
+    background-color: #5a6268;
+}
+
+/* Estilos para a mensagem de sucesso (cancelamento realizado) */
+.success-container {
+    position: relative;
+    overflow: hidden;
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+.success-message {
+    background-color: #d4edda; /* Verde suave para sucesso */
+    color: #155724;
+    padding: 10px 15px;
+    border: 1px solid #c3e6cb;
+    border-radius: 4px;
+    font-weight: bold;
+    opacity: 0;
+    transform: translateY(-20px);
+    animation: slideIn 0.5s ease-out forwards 0.2s;
+    display: inline-block;
+}
+
+.success-icon {
+    position: absolute;
+    left: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #28a745; /* Verde para o ícone de sucesso */
+    font-size: 1.2em;
+}
+
+/* Estilos para o botão de cancelar no painel */
+.cancel-plan-button {
+    background-color: #ffc107; /* Amarelo/laranja para chamar atenção */
+    color: #212529; /* Texto escuro */
+    padding: 12px 24px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: background-color 0.3s ease;
+    margin-top: 20px;
+    display: inline-block; /* Para se alinhar com outros elementos, se necessário */
+    text-decoration: none; /* Para remover sublinhado se usado em um <a> */
+}
+
+.cancel-plan-button:hover {
+    background-color: #e0a800;
+}
+
+/* Estilo para o botão de pagamento */
+.payment-button {
+    background-color: #007bff; /* Azul para o botão de pagamento */
+    color: white;
+    padding: 12px 24px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: background-color 0.3s ease;
+    margin-top: 10px;
+    display: inline-block;
+    text-decoration: none;
+}
+
+.payment-button:hover {
+    background-color: #0056b3;
+}
+
+/* Estilos para a informação do plano */
+.plan-info {
+    background-color: #f9f9f9;
+    padding: 15px;
+    border: 1px solid #eee;
+    border-radius: 8px;
+    margin-bottom: 20px;
+}
+
+.plan-info h4 {
+    margin-top: 0;
+    color: #333;
+}
+
+.usage-remaining {
+    font-size: 1.1em;
+    color: #555;
+    margin-bottom: 10px;
+}
+
+.strong-value {
+    font-weight: bold;
+    color: #007bff;
+}

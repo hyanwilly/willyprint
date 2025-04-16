@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Willy Print - Entrar ou Registrar</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <style>
+        /* Estilos específicos para esta página */
+        body {
+            background-color: #f4f6f8;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+        }
+
+        .auth-container {
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+            padding: 40px;
+            text-align: center;
+            max-width: 400px;
+            width: 90%;
+        }
+
+        .logo {
+            margin-bottom: 30px;
+        }
+
+        .logo img {
+            max-width: 150px;
+            height: auto;
+        }
+
+        h1 {
+            color: #2c3e50;
+            margin-bottom: 30px;
+        }
+
+        .auth-links {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            width: 100%;
+        }
+
+        .auth-link {
+            display: block;
+            padding: 15px 20px;
+            border: 1px solid #007bff;
+            color: #007bff;
+            text-decoration: none;
+            border-radius: 6px;
+            transition: background-color 0.3s ease, color 0.3s ease;
+            text-align: center;
+        }
+
+        .auth-link:hover {
+            background-color: #007bff;
+            color: white;
+        }
+
+        .separator {
+            margin: 20px 0;
+            color: #777;
+            position: relative;
+        }
+
+        .separator::before,
+        .separator::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background-color: #ddd;
+            transform: translateY(-50%);
+        }
+
+        .separator span {
+            background-color: #fff;
+            padding: 0 10px;
+            position: relative;
+            z-index: 1;
+        }
+    </style>
+</head>
+<body>
+    <div class="auth-container">
+        <div class="logo">
+            <img src="{{ url_for('static', filename='logo.png') }}" alt="Logotipo Willy Print">
+        </div>
+        <h1>Bem-vindo(a) à Willy Print</h1>
+        <div class="auth-links">
+            <a href="{{ url_for('login') }}" class="auth-link">Entrar</a>
+            <div class="separator"><span>ou</span></div>
+            <a href="{{ url_for('register') }}" class="auth-link">Registrar</a>
+        </div>
+    </div>
+</body>
+</html>

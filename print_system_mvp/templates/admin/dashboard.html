@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Painel Administrativo</title>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='style.css') }}">
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 20px;
+            background-color: #f4f4f4;
+            color: #333;
+        }
+        .container {
+            background-color: #fff;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            max-width: 950px;
+            margin: 0 auto;
+        }
+        .logo {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        .logo img {
+            max-width: 180px;
+            height: auto;
+        }
+        h2, h3 {
+            color: #2c3e50;
+            text-align: center;
+            margin-bottom: 25px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+            border-radius: 8px;
+            overflow: hidden;
+            background-color: #fff;
+        }
+        th, td {
+            border-bottom: 1px solid #e0e0e0;
+            padding: 12px 15px;
+            text-align: left;
+        }
+        th {
+            background-color: #34495e;
+            color: #fff;
+            font-weight: bold;
+            text-transform: uppercase;
+        }
+        tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+        tr:hover {
+            background-color: #ecf0f1;
+        }
+        .button {
+            display: inline-block;
+            padding: 8px 12px;
+            margin: 5px 5px 0 0;
+            background-color: #3498db;
+            color: white;
+            text-decoration: none;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            font-size: 0.9em;
+        }
+        .button:hover {
+            background-color: #2980b9;
+        }
+        .release-button {
+            background-color: #27ae60;
+        }
+        .release-button:hover {
+            background-color: #219653;
+        }
+        .reject-button {
+            background-color: #e74c3c;
+        }
+        .reject-button:hover {
+            background-color: #c0392b;
+        }
+        .remove-plan-button {
+            background-color: #e74c3c;
+        }
+        .remove-plan-button:hover {
+            background-color: #c0392b;
+        }
+        .add-usage-button {
+            background-color: #f39c12;
+            color: white;
+        }
+        .add-usage-button:hover {
+            background-color: #e67e22;
+        }
+        .remove-usage-button {
+            background-color: #d35400;
+            color: white;
+        }
+        .remove-usage-button:hover {
+            background-color: #c0392b;
+        }
+        .active {
+            color: #27ae60;
+            font-weight: bold;
+        }
+        .inactive {
+            color: #c0392b;
+        }
+        .no-plan {
+            color: #777;
+            font-style: italic;
+        }
+        .mt-2 {
+            margin-top: 30px;
+            text-align: center;
+        }
+        .mt-2 a {
+            margin: 0 15px;
+            color: #3498db;
+            text-decoration: none;
+            font-weight: bold;
+        }
+        .mt-2 a:hover {
+            text-decoration: underline;
+        }
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0,0,0,0.4);
+        }
+        .modal-content {
+            background-color: #fefefe;
+            margin: 15% auto;
+            padding: 20px;
+            border: 1px solid #888;
+            width: 80%;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+            position: relative;
+        }
+        .close-button {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+        }
+        .close-button:hover,
+        .close-button:focus {
+            color: black;
+            text-decoration: none;
+            cursor: pointer;
+        }
+        .usage-form label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: bold;
+        }
+        .usage-form input[type=number] {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 15px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+        .usage-form button {
+            background-color: #28a745;
+            color: white;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 1em;
+            transition: background-color 0.3s ease;
+        }
+        .usage-form button:hover {
+            background-color: #1e7e34;
+        }
+        .usage-form .error-message {
+            color: red;
+            margin-top: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="logo">
+            <img src="{{ url_for('static', filename='logo.png') }}" alt="Logotipo Willy Print">
+        </div>
+        <h2>Painel Administrativo</h2>
+
+        <h3>Pedidos de Pagamento Pendentes</h3>
+        {% if pending_orders %}
+        <table>
+            <thead>
+                <tr>
+                    <th>Código do Pedido</th>
+                    <th>Email do Usuário</th>
+                    <th>Plano</th>
+                    <th>Data do Pedido</th>
+                    <th>Ações</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for order_code, order_info in pending_orders.items() %}
+                <tr>
+                    <td>{{ order_code }}</td>
+                    <td>{{ order_info.email }}</td>
+                    <td>{{ planos_data[order_info.plan_name].nome }}</td>
+                    <td>{{ order_info.created_at.strftime('%d/%m/%Y %H:%M:%S') }}</td>
+                    <td>
+                        <a href="{{ url_for('admin_release_plan', order_code=order_code) }}" class="button release-button">Liberar</a>
+                        <a href="{{ url_for('admin_reject_plan', order_code=order_code) }}" class="button reject-button">Recusar</a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        {% else %}
+        <p>Não há pedidos de pagamento pendentes.</p>
+        {% endif %}
+
+        <h3>Usuários Cadastrados e Planos Ativos</h3>
+        {% if users %}
+        <table>
+            <thead>
+                <tr>
+                    <th>Email</th>
+                    <th>Plano Ativo</th>
+                    <th>Status</th>
+                    <th>Ações</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for email, user_data in users.items() %}
+                <tr>
+                    <td>{{ email }}</td>
+                    <td>
+                        {% if user_plans.get(email) %}
+                            {{ planos_data[user_plans.get(email)['nome']].nome }} (Expira em: {{ user_plans.get(email)['data_expiracao'].strftime('%d/%m/%Y %H:%M:%S') }})
+                        {% else %}
+                            <span class="no-plan">Nenhum</span>
+                        {% endif %}
+                    </td>
+                    <td>
+                        {% if user_data.payment_status == 'active' %}
+                            <span class="active">Ativo</span>
+                        {% else %}
+                            <span class="inactive">{{ user_data.payment_status|capitalize }}</span>
+                        {% endif %}
+                    </td>
+                    <td>
+                        {% if user_plans.get(email) %}
+                            <a href="{{ url_for('admin_remove_plan', email=email) }}" class="button remove-plan-button">Remover Plano</a>
+                            <button class="button add-usage-button" onclick="openAddUsageModal('add', '{{ email }}')">Adicionar Impressões</button>
+                            <button class="button remove-usage-button" onclick="openAddUsageModal('remove', '{{ email }}')">Remover Impressões</button>
+                        {% endif %}
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        <p>Total de Usuários Cadastrados: <strong>{{ users|length }}</strong></p>
+        {% else %}
+        <p>Não há usuários cadastrados.</p>
+        {% endif %}
+
+        <p class="mt-2"><a href="{{ url_for('logout') }}">Sair</a> | <a href="{{ url_for('index') }}">Início</a></p>
+
+        <div id="addUsageModal" class="modal">
+            <div class="modal-content">
+                <span class="close-button" onclick="closeAddUsageModal()">&times;</span>
+                <h3 id="modalTitle"></h3>
+                <form id="addUsageForm" class="usage-form" method="POST" action="{{ url_for('admin_adjust_usage') }}">
+                    <input type="hidden" id="usage_email" name="email">
+                    <input type="hidden" id="usage_action" name="action">
+                    <label for="pages">Número de Páginas:</label>
+                    <input type="number" id="pages" name="pages" min="1" required>
+                    <button type="submit">Confirmar</button>
+                    {% if error_message %}
+                        <p class="error-message">{{ error_message }}</p>
+                    {% endif %}
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const addUsageModal = document.getElementById('addUsageModal');
+        const modalTitle = document.getElementById('modalTitle');
+        const usageAction = document.getElementById('usage_action');
+        const addUsageForm = document.getElementById('addUsageForm');
+
+        function openAddUsageModal(action, email) {
+            document.getElementById('usage_email').value = email;
+            usageAction.value = action;
+            document.getElementById('pages').value = ''; // Limpar o campo de páginas
+
+            if (action === 'add') {
+                modalTitle.textContent = 'Adicionar Impressões';
+            } else if (action === 'remove') {
+                modalTitle.textContent = 'Remover Impressões';
+            }
+            addUsageModal.style.display = "block";
+        }
+
+        function closeAddUsageModal() {
+            addUsageModal.style.display = "none";
+        }
+
+        window.onclick = function(event) {
+            if (event.target == addUsageModal) {
+                closeAddUsageModal();
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            const removeButtons = document.querySelectorAll('.remove-plan-button');
+            removeButtons.forEach(button => {
+                button.addEventListener('click', function(event) {
+                    if (!confirm('Tem certeza que deseja remover o plano ativo deste usuário?')) {
+                        event.preventDefault();
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Painel de Controle</title>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='style.css') }}">
+    <style>
+        body {
+            font-family: sans-serif;
+            margin: 20px;
+            background-color: #f4f4f4;
+        }
+        .container {
+            background-color: #fff;
+            padding: 40px; /* Reduzi o padding interno */
+            border-radius: 12px;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1); /* Sombra um pouco menor */
+            max-width: 700px; /* Defini uma largura máxima menor */
+            width: 95%; /* Garante que o container ocupe até 95% da largura da tela */
+            text-align: center;
+            box-sizing: border-box;
+        }
+        .logo {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .logo img {
+            max-width: 150px;
+            height: auto;
+        }
+        .plan-info {
+            background-color: #e9ecef;
+            padding: 15px;
+            border-radius: 6px;
+            margin-bottom: 20px;
+            border: 1px solid #ced4da;
+        }
+        .plan-info h4 {
+            margin-top: 0;
+            color: #333;
+        }
+        .usage-remaining {
+            margin: 8px 0;
+            color: #495057;
+        }
+        .strong-value {
+            font-weight: bold;
+            color: #007bff;
+        }
+        .button {
+            display: inline-block;
+            padding: 10px 20px;
+            margin-top: 10px;
+            background-color: #007bff;
+            color: white;
+            text-decoration: none;
+            border-radius: 6px;
+            border: none;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+        .button:hover {
+            background-color: #0056b3;
+        }
+        .cancel-plan-button {
+            background-color: #ffc107;
+            color: #212529;
+        }
+        .cancel-plan-button:hover {
+            background-color: #e0a800;
+        }
+        .payment-button {
+            background-color: #28a745;
+        }
+        .payment-button:hover {
+            background-color: #1e7e34;
+        }
+        .debits-button {
+            background-color: #6c757d;
+            color: white;
+        }
+        .debits-button:hover {
+            background-color: #5a6268;
+        }
+        .logout-link {
+            display: block;
+            margin-top: 20px;
+            color: #dc3545;
+            text-decoration: none;
+            text-align: center;
+        }
+        .logout-link:hover {
+            text-decoration: underline;
+        }
+        .success-container {
+            position: relative;
+            overflow: hidden;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        .success-message {
+            background-color: #d4edda;
+            color: #155724;
+            padding: 10px 15px;
+            border: 1px solid #c3e6cb;
+            border-radius: 4px;
+            font-weight: bold;
+            display: inline-block;
+        }
+        .confirmation-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+        }
+        .confirmation-box {
+            background-color: #fff;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+            text-align: center;
+        }
+        .confirmation-buttons button {
+            padding: 12px 24px;
+            margin: 0 10px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: background-color 0.3s ease;
+        }
+        .confirm-button {
+            background-color: #dc3545;
+            color: white;
+        }
+        .confirm-button:hover {
+            background-color: #c82333;
+        }
+        .cancel-button {
+            background-color: #6c757d;
+            color: white;
+        }
+        .cancel-button:hover {
+            background-color: #5a6268;
+        }
+        .select-plan-container {
+            background-color: #f8f9fa;
+            padding: 15px;
+            border-radius: 6px;
+            margin-bottom: 20px;
+            border: 1px solid #dee2e6;
+            text-align: center;
+        }
+        .select-plan-container p {
+            margin-bottom: 10px;
+            color: #495057;
+        }
+    </style>
+    <script>
+        function showConfirmation() {
+            document.getElementById('confirmationOverlay').style.display = 'flex';
+        }
+
+        function hideConfirmation(cancel = true) {
+            document.getElementById('confirmationOverlay').style.display = 'none';
+            if (!cancel) {
+                document.getElementById('cancelPlanForm').submit();
+            }
+        }
+    </script>
+</head>
+<body>
+    <div class="container">
+        <div class="logo">
+            <img src="{{ url_for('static', filename='logo.png') }}" alt="Logotipo Willy Print">
+        </div>
+        <h2>Painel de Controle</h2>
+        {% if session.get('cancel_success') %}
+        <div class="success-container">
+            <div class="success-message">
+                <span class="success-icon">&#10004;</span> {{ session.pop('cancel_success') }}
+            </div>
+        </div>
+        {% endif %}
+        {% if plan %}
+        <div class="plan-info">
+            <h4>Informações do Seu Plano</h4>
+            <p class="usage-remaining">Plano Atual: <strong class="strong-value">{{ plan.nome }}</strong></p>
+            <p class="usage-remaining">Impresso: <strong class="strong-value">{{ usage }}</strong> páginas</p>
+            <p class="usage-remaining">Restante: <strong class="strong-value">{{ remaining }}</strong> de {{ plan.limite }} páginas</p>
+        </div>
+        <button onclick="showConfirmation()" class="cancel-plan-button button">Cancelar Plano Atual e Alterar</button>
+        <a href="{{ url_for('plans') }}" class="payment-button button">Gerenciar Planos</a>
+
+        <div id="confirmationOverlay" class="confirmation-overlay">
+            <div class="confirmation-box">
+                <h3>Confirmar Cancelamento?</h3>
+                <p>Você tem certeza que deseja cancelar seu plano atual? Esta ação não pode ser desfeita.</p>
+                <div class="confirmation-buttons">
+                    <button onclick="hideConfirmation(false)" class="confirm-button button">Confirmar Cancelamento</button>
+                    <button onclick="hideConfirmation(true)" class="cancel-button button">Cancelar</button>
+                </div>
+            </div>
+        </div>
+
+        <form id="cancelPlanForm" action="{{ url_for('cancel_and_change_plan') }}" method="POST" style="display: none;">
+            </form>
+
+        {% else %}
+        <div class="select-plan-container">
+            <p>Você ainda não possui um plano ativo. Selecione um plano para continuar.</p>
+            <a href="{{ url_for('plans') }}" class="payment-button button">Selecionar Plano</a>
+        </div>
+        {% endif %}
+        <a href="{{ url_for('logout') }}">Sair</a>
+    </div>
+</body>
+</html>
